@@ -3,15 +3,25 @@
 #include <iostream>
 #include <QErrorMessage>
 #include <QMessageBox>
+#include <QTimer>
+#include <QDebug>
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_image.h>
 
 WNWindow::WNWindow()
-    : WNWindow(1200, 720, 0)
+    : WNWindow(1200, 720, 50, 60, 0, false, true)
 {}
 
-WNWindow::WNWindow(const uint width, const uint height, const uint buffer_size)
-    : _is_init(false), _width(width), _heigth(height), _buffer_size(buffer_size)
+WNWindow::WNWindow(const uint width, const uint height,
+                   const uint probability,
+                   const uint gen_rate,
+                   const uint buffer_size,
+                   const bool isFullscrene, const bool showCursor)
+    : _is_init(false),
+      _width(width), _heigth(height),
+      _probability(probability), _gen_rate(gen_rate), _buffer_size(buffer_size),
+      _isFullscrene(isFullscrene), _showCursor(showCursor),
+      _pixles(new int[_width * _heigth])
 {}
 
 WNWindow::~WNWindow()
@@ -37,9 +47,16 @@ WNWindow::~WNWindow()
     }
 }
 
+
+bool WNWindow::isInit()
+{
+    return _is_init;
+}
+
+
 void WNWindow::init()
 {
-    // Singelton
+    // "Singleton"
     if (_is_init)
     {
         return;
@@ -70,7 +87,9 @@ void WNWindow::init()
 
     // Generate SDL renderer
     _renderer = SDL_CreateRenderer(
-        _window, -1, SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC);
+        _window,
+        -1,
+        SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC);
     if (!_renderer)
     {
         QMessageBox::critical(
@@ -87,8 +106,16 @@ void WNWindow::init()
         return;
     }
 
+
+    // Set Fullscrene
+    SDL_SetWindowFullscreen(_window, _isFullscrene);
+
+    // Set if Cursor should be shown
+    SDL_ShowCursor(_showCursor);
+
+
     // Set Background Color (black)
-    if (SDL_SetRenderDrawColor(_renderer, 255, 255, 255, 0))
+    if (SDL_SetRenderDrawColor(_renderer, 0, 0, 0, 0))
     {
         QMessageBox::critical(
             nullptr,
@@ -104,10 +131,68 @@ void WNWindow::init()
         return;
     }
 
+    // Clear the Screen
+    SDL_RenderClear(_renderer);
+
+
     // Draw Background Color
     SDL_RenderPresent(_renderer);
 
 
-    // Singleton
+    // Sedule Generation every x seconds
+    QTimer *genTimer = new QTimer(this);
+    connect(genTimer, SIGNAL(timeout()), this, SLOT(generate())); //&WNWindow::generate);
+    genTimer->start(_gen_rate);
+
+    // Sedule Renering every x seconds
+    QTimer *renderTimer = new QTimer(this);
+    connect(renderTimer, SIGNAL(timeout()), this, SLOT(render())); //&WNWindow::generate);
+    renderTimer->start(17);
+
+
+    // Initialisation succenssful
     _is_init = true;
+}
+
+void WNWindow::render()
+{
+    // Draw Background (black)
+    SDL_SetRenderDrawColor(_renderer, 255, 255, 255, 255);
+    SDL_RenderClear(_renderer);
+
+    // Set Star Color (white)
+    SDL_SetRenderDrawColor(_renderer, 0, 0, 0, 255);
+
+    // Check all Pixels, if they should be drawn
+    for (uint i = 0; i < _width * _heigth; i++)
+    {
+        if (_pixles[i] == 1)
+        {
+            SDL_RenderDrawPoint(_renderer, i % _width, (int)((float)i / _width));
+        }
+    }
+
+    // Draw Everything
+    SDL_RenderPresent(_renderer);
+}
+
+void WNWindow::generate()
+{
+    if (_probability == 0)
+    {
+        return;
+    }
+
+    for (uint i = 0; i < _width * _heigth; i++)
+    {
+        // Check if Pixel is noised // TODO better comment :(
+        if (rand() > (float)RAND_MAX * ((float)_probability) / 100)
+        {
+            _pixles[i] = 1;
+        }
+        else
+        {
+            _pixles[i] = 0;
+        }
+    }
 }
