@@ -21,7 +21,8 @@ MainWindow::~MainWindow()
         _wnWindow = nullptr;
     }
 
-    SDL_Quit(); // Cleanup SDL
+    // Cleanup SDL
+    SDL_Quit();
 
     delete ui;
 }
@@ -34,17 +35,25 @@ void MainWindow::on_start_button_clicked()
     {
         delete _wnWindow;
         _wnWindow = nullptr;
+
+        // Change Text of Button
+        ui->start_button->setText("Start");
+
         return;
     }
     // Generate Window with the input values
     else
     {
-        // Convert to uinteger (if not a valid int, then 0)
+        // Convert to unsigned integer (if not a valid int, default is 0)
         uint width = ui->width_lineEdit->text().toUInt();
         uint height = ui->height_lineEdit->text().toUInt();
         uint buffer_size = ui->buffer_slider->value();
 
+        // Create SDL Window and initialize it
         _wnWindow = new WNWindow(width, height, buffer_size);
-        _wnWindow->init();
+        _wnWindow->init(); // TODO try catch
+
+        // Change Text of Button
+        ui->start_button->setText("Stop");
     }
 }
