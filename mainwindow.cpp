@@ -12,9 +12,8 @@ MainWindow::MainWindow(QWidget *parent)
 {
     ui->setupUi(this);
 
-    connect(ui->probability_lineEdit, SIGNAL(textEdited(QString)),
-            ui->probability_slider,
-            SLOT(rag_valuechanged()));
+    // Disable Pause Button
+    ui->pause_button->setDisabled(true); // TODO make default state disabed in designer
 
     // Init SDL with video
     SDL_Init(SDL_INIT_VIDEO);
@@ -44,8 +43,12 @@ void MainWindow::on_start_button_clicked()
         delete _wnWindow;
         _wnWindow = nullptr;
 
-        // Change Text of Button
+        // Turn Start Button into a Stop Button
         ui->start_button->setText("Start");
+
+        // Disable Pause Button
+        ui->pause_button->setDisabled(true);
+        ui->pause_button->setText("Pause");
 
         return;
     }
@@ -58,17 +61,21 @@ void MainWindow::on_start_button_clicked()
              probability    = ui->probability_lineEdit->text().toUInt(),
              gen_rate       = ui->gen_lineEdit->text().toUInt(),
              frame_rate     = ui->frameRate_lineEdit->text().toUInt();
+
         bool isFullscrene   = ui->fullscreen_checkBox->isChecked(),
              showCursor     = ui->showCursor_checkBox->isChecked();
 
 
-        // Create SDL Window and initialize it
-        _wnWindow = new WNWindow(width, height,
-                                 probability, gen_rate, frame_rate,
-                                 isFullscrene, showCursor);
-        _wnWindow->init();
-        if (!_wnWindow->isInit())
+        try
         {
+            // Create SDL Window and initialize it
+            _wnWindow = new WNWindow(width, height,
+                                     probability, gen_rate, frame_rate,
+                                     isFullscrene, showCursor);
+        }
+        catch (...)
+        {
+            // shows an error message
             QMessageBox::critical(
                 nullptr,
                 "Critical Error:",
@@ -78,14 +85,19 @@ void MainWindow::on_start_button_clicked()
             delete _wnWindow;
             _wnWindow = nullptr;
 
-            return;
+            return; // no ui changes and stop
         }
 
-        // Change Text of Button
+
+        // Turn Stop Button into a Start Button
         ui->start_button->setText("Stop");
 
+        // Enable Pause Button
+        ui->pause_button->setDisabled(false);
+        ui->pause_button->setText("Play");
 
-        // First Time generation and render
+
+        // First Time generation and render to not start with a blank screen
         _wnWindow->generate();
         _wnWindow->render();
     }
@@ -104,9 +116,29 @@ void MainWindow::on_fullscreen_checkBox_stateChanged(int state)
     ui->width_lineEdit->setText(QString::number(width));
     ui->height_lineEdit->setText(QString::number(height));
 
-    // disable width and height input
+    // disable width input
     ui->width_label->setDisabled(isFullscrene);
     ui->width_lineEdit->setDisabled(isFullscrene);
+    // disable height input
     ui->height_label->setDisabled(isFullscrene);
     ui->height_lineEdit->setDisabled(isFullscrene);
+}
+
+void MainWindow::on_pause_button_clicked(bool checked)
+{
+    // only execute, when a window exists
+    if (_wnWindow)
+    {
+        // Change Text of Button
+        if (checked)
+        {
+            ui->pause_button->setText("Play");
+        }
+        else
+        {
+            ui->pause_button->setText("Pause");
+        }
+
+        _wnWindow->togglePause();
+    }
 }

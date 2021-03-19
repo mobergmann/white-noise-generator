@@ -66,7 +66,7 @@
           <item>
            <widget class="QLabel" name="gen_label">
             <property name="toolTip">
-             <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;The rate, at which a noise should be generated.&lt;/p&gt;&lt;p&gt;In Generations per Millisecond.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+             <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;The rate, at which a new noise should be generated.&lt;/p&gt;&lt;p&gt;In &lt;span style=&quot; font-weight:600; font-style:italic;&quot;&gt;Generations per Millisecond&lt;/span&gt;.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
             </property>
             <property name="text">
              <string>Gen. Rate:</string>
@@ -74,23 +74,13 @@
            </widget>
           </item>
           <item>
-           <widget class="QSlider" name="gen_slider">
-            <property name="maximum">
-             <number>120</number>
-            </property>
-            <property name="orientation">
-             <enum>Qt::Horizontal</enum>
+           <widget class="QLineEdit" name="gen_lineEdit">
+            <property name="text">
+             <string>33</string>
             </property>
            </widget>
           </item>
          </layout>
-        </item>
-        <item>
-         <widget class="QLineEdit" name="gen_lineEdit">
-          <property name="text">
-           <string>17</string>
-          </property>
-         </widget>
         </item>
        </layout>
       </item>
@@ -119,7 +109,7 @@
           <item>
            <widget class="QLabel" name="probability_label">
             <property name="toolTip">
-             <string extracomment="the probability, that a pixel is noised (white)">&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;The probability, that a pixel is noised (white).&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+             <string extracomment="the probability, that a pixel is noised (white)">&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;The probability, that a pixel is noised (here it's if the pixel should &lt;span style=&quot; font-weight:600;&quot;&gt;turn black&lt;/span&gt;).&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
             </property>
             <property name="text">
              <string>Probability:</string>
@@ -127,26 +117,16 @@
            </widget>
           </item>
           <item>
-           <widget class="QSlider" name="probability_slider">
-            <property name="maximum">
-             <number>100</number>
+           <widget class="QLineEdit" name="probability_lineEdit">
+            <property name="toolTip">
+             <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;From 0 to 100. The Probability is then &lt;span style=&quot; font-style:italic;&quot;&gt;p = n/100&lt;/span&gt;.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
             </property>
-            <property name="orientation">
-             <enum>Qt::Horizontal</enum>
+            <property name="text">
+             <string>45</string>
             </property>
            </widget>
           </item>
          </layout>
-        </item>
-        <item>
-         <widget class="QLineEdit" name="probability_lineEdit">
-          <property name="toolTip">
-           <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;From 0 to 100. The Probability is then &lt;span style=&quot; font-style:italic;&quot;&gt;p = n/100&lt;/span&gt;.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-          </property>
-          <property name="text">
-           <string>45</string>
-          </property>
-         </widget>
         </item>
        </layout>
       </item>
@@ -156,6 +136,9 @@
          <layout class="QVBoxLayout" name="width_layout">
           <item>
            <widget class="QLabel" name="width_label">
+            <property name="toolTip">
+             <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Width of the Window.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+            </property>
             <property name="text">
              <string>Width:</string>
             </property>
@@ -174,6 +157,9 @@
          <layout class="QVBoxLayout" name="height_layout">
           <item>
            <widget class="QLabel" name="height_label">
+            <property name="toolTip">
+             <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Height of the Window.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+            </property>
             <property name="text">
              <string>Height:</string>
             </property>
@@ -196,26 +182,22 @@
          <layout class="QHBoxLayout" name="frameRate_slider_layout">
           <item>
            <widget class="QLabel" name="frameRate_label">
+            <property name="toolTip">
+             <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Rate at which the screen should be redrawn/ updated.&lt;/p&gt;&lt;p&gt;In &lt;span style=&quot; font-weight:600; font-style:italic;&quot;&gt;Update per Millisecond&lt;/span&gt;.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+            </property>
             <property name="text">
-             <string>Frame Rate</string>
+             <string>Frame Rate:</string>
             </property>
            </widget>
           </item>
           <item>
-           <widget class="QSlider" name="frameRate_slider">
-            <property name="orientation">
-             <enum>Qt::Horizontal</enum>
+           <widget class="QLineEdit" name="frameRate_lineEdit">
+            <property name="text">
+             <string>33</string>
             </property>
            </widget>
           </item>
          </layout>
-        </item>
-        <item>
-         <widget class="QLineEdit" name="frameRate_lineEdit">
-          <property name="text">
-           <string>17</string>
-          </property>
-         </widget>
         </item>
        </layout>
       </item>

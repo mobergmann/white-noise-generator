@@ -22,6 +22,8 @@ private slots:
 
     void on_fullscreen_checkBox_stateChanged(int arg1);
 
+    void on_pause_button_clicked(bool checked);
+
 private:
     Ui::MainWindow* ui;
 

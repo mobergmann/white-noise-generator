@@ -12,13 +12,15 @@ class WNWindow : public QWidget
     Q_OBJECT
 
 private:
-    bool _is_init;
+    bool _isInit;
 
     const uint  _width,
                 _heigth;
     const uint  _probability,
                 _genRate, _frameRate;
     const bool  _isFullscrene, _showCursor;
+
+    bool _isPause;
 
     SDL_Window* _window;
     SDL_Renderer* _renderer;
@@ -50,15 +52,15 @@ public:
     virtual ~WNWindow();
 
     /**
-     * @brief returns if the init was successful
+     * @brief returns, if the stream is paused.
      * @return …
      */
-    bool isInit() const;
+    bool isPaused() const;
 
     /**
-     * @brief initializes the Object
+     * @brief inverts the pause statement.
      */
-    void init();
+    void togglePause();
 
 public slots:
 

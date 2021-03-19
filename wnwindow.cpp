@@ -17,52 +17,12 @@ WNWindow::WNWindow(const uint width, const uint height,
                    const uint probability,
                    const uint genRate, const uint frameRate,
                    const bool isFullscrene, const bool showCursor)
-    : _is_init(false),
-      _width(width), _heigth(height),
+    : _width(width), _heigth(height),
       _probability(probability), _genRate(genRate), _frameRate(frameRate),
       _isFullscrene(isFullscrene), _showCursor(showCursor),
+      _isPause(false),
       _pixles(new int[_width * _heigth])
-{}
-
-WNWindow::~WNWindow()
 {
-    // TODO check if renderer and windowdestruction has to be switched
-
-    // Only if the init function has been called
-    if (_is_init)
-    {
-        // Cleanup of renderer only if exists
-        if (_renderer)
-        {
-            SDL_DestroyRenderer(_renderer);
-            _renderer = nullptr;
-        }
-
-        // Cleanup of window only if exists
-        if (_window)
-        {
-            SDL_DestroyWindow(_window);
-            _window = nullptr;
-        }
-    }
-}
-
-
-bool WNWindow::isInit() const
-{
-    return _is_init;
-}
-
-
-void WNWindow::init()
-{
-    // "Singleton"
-    if (_is_init)
-    {
-        return;
-    }
-
-
     // Generate SDL main window
     _window = SDL_CreateWindow(
         "White Noise",
@@ -150,12 +110,42 @@ void WNWindow::init()
     renderTimer->start(_frameRate);
 
 
-    // Initialisation succenssful
-    _is_init = true;
+}
+
+WNWindow::~WNWindow()
+{
+    // Cleanup of renderer only if exists
+    if (_renderer)
+    {
+        SDL_DestroyRenderer(_renderer);
+        _renderer = nullptr;
+    }
+
+    // Cleanup of window only if exists
+    if (_window)
+    {
+        SDL_DestroyWindow(_window);
+        _window = nullptr;
+    }
+}
+
+bool WNWindow::isPaused() const
+{
+    return _isPause;
+}
+
+void WNWindow::togglePause()
+{
+    _isPause = !_isPause;
 }
 
 void WNWindow::render()
 {
+    if (_isPause)
+    {
+        return;
+    }
+
     // Draw Background (black)
     SDL_SetRenderDrawColor(_renderer, 255, 255, 255, 255);
     SDL_RenderClear(_renderer);
@@ -178,6 +168,11 @@ void WNWindow::render()
 
 void WNWindow::generate()
 {
+    if (_isPause)
+    {
+        return;
+    }
+
     if (_probability == 0)
     {
         return;
