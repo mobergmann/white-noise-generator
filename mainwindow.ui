@@ -29,82 +29,7 @@
    <layout class="QVBoxLayout" name="verticalLayout_4">
     <item>
      <layout class="QGridLayout" name="gridLayout">
-      <item row="1" column="0">
-       <layout class="QHBoxLayout" name="horizontalLayout">
-        <item>
-         <layout class="QVBoxLayout" name="verticalLayout_3">
-          <item>
-           <widget class="QLabel" name="width_label">
-            <property name="text">
-             <string>Width:</string>
-            </property>
-           </widget>
-          </item>
-          <item>
-           <widget class="QLineEdit" name="width_lineEdit">
-            <property name="text">
-             <string>1200</string>
-            </property>
-           </widget>
-          </item>
-         </layout>
-        </item>
-        <item>
-         <layout class="QVBoxLayout" name="verticalLayout_2">
-          <item>
-           <widget class="QLabel" name="height_label">
-            <property name="text">
-             <string>Height:</string>
-            </property>
-           </widget>
-          </item>
-          <item>
-           <widget class="QLineEdit" name="height_lineEdit">
-            <property name="text">
-             <string>720</string>
-            </property>
-           </widget>
-          </item>
-         </layout>
-        </item>
-       </layout>
-      </item>
-      <item row="4" column="0">
-       <layout class="QVBoxLayout" name="buffer_layout">
-        <item>
-         <layout class="QHBoxLayout" name="buffer_slider_layout">
-          <item>
-           <widget class="QLabel" name="buffer_label">
-            <property name="toolTip">
-             <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;The number of Images, which should be generates ahead.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-            </property>
-            <property name="text">
-             <string>Buffer:</string>
-            </property>
-           </widget>
-          </item>
-          <item>
-           <widget class="QSlider" name="buffer_slider">
-            <property name="maximum">
-             <number>120</number>
-            </property>
-            <property name="orientation">
-             <enum>Qt::Horizontal</enum>
-            </property>
-           </widget>
-          </item>
-         </layout>
-        </item>
-        <item>
-         <widget class="QLineEdit" name="buffer_lineEdit">
-          <property name="text">
-           <string>0</string>
-          </property>
-         </widget>
-        </item>
-       </layout>
-      </item>
-      <item row="6" column="0">
+      <item row="5" column="0">
        <layout class="QVBoxLayout" name="verticalLayout">
         <item>
          <widget class="QPushButton" name="pause_button">
@@ -169,6 +94,24 @@
         </item>
        </layout>
       </item>
+      <item row="4" column="0">
+       <layout class="QVBoxLayout" name="settings_layout">
+        <item>
+         <widget class="QCheckBox" name="fullscreen_checkBox">
+          <property name="text">
+           <string>Fullscrene</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QCheckBox" name="showCursor_checkBox">
+          <property name="text">
+           <string>Show Cursor</string>
+          </property>
+         </widget>
+        </item>
+       </layout>
+      </item>
       <item row="2" column="0">
        <layout class="QVBoxLayout" name="probability_layout">
         <item>
@@ -207,21 +150,43 @@
         </item>
        </layout>
       </item>
-      <item row="5" column="0">
-       <layout class="QVBoxLayout" name="settings_layout">
+      <item row="1" column="0">
+       <layout class="QHBoxLayout" name="horizontalLayout">
         <item>
-         <widget class="QCheckBox" name="fullscreen_checkBox">
-          <property name="text">
-           <string>Fullscrene</string>
-          </property>
-         </widget>
+         <layout class="QVBoxLayout" name="verticalLayout_3">
+          <item>
+           <widget class="QLabel" name="width_label">
+            <property name="text">
+             <string>Width:</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QLineEdit" name="width_lineEdit">
+            <property name="text">
+             <string>1200</string>
+            </property>
+           </widget>
+          </item>
+         </layout>
         </item>
         <item>
-         <widget class="QCheckBox" name="showCursor_checkBox">
-          <property name="text">
-           <string>Show Cursor</string>
-          </property>
-         </widget>
+         <layout class="QVBoxLayout" name="verticalLayout_2">
+          <item>
+           <widget class="QLabel" name="height_label">
+            <property name="text">
+             <string>Height:</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QLineEdit" name="height_lineEdit">
+            <property name="text">
+             <string>720</string>
+            </property>
+           </widget>
+          </item>
+         </layout>
         </item>
        </layout>
       </item>

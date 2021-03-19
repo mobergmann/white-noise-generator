@@ -8,18 +8,18 @@
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_image.h>
 
+
 WNWindow::WNWindow()
-    : WNWindow(1200, 720, 50, 60, 0, false, true)
+    : WNWindow(1200, 720, 45, 17, false, true)
 {}
 
 WNWindow::WNWindow(const uint width, const uint height,
                    const uint probability,
                    const uint gen_rate,
-                   const uint buffer_size,
                    const bool isFullscrene, const bool showCursor)
     : _is_init(false),
       _width(width), _heigth(height),
-      _probability(probability), _gen_rate(gen_rate), _buffer_size(buffer_size),
+      _probability(probability), _gen_rate(gen_rate),
       _isFullscrene(isFullscrene), _showCursor(showCursor),
       _pixles(new int[_width * _heigth])
 {}

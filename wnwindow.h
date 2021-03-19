@@ -7,8 +7,6 @@
 #include <QWidget>
 #include <thread>
 
-using std::thread;
-
 class WNWindow : public QWidget
 {
     Q_OBJECT
@@ -19,8 +17,7 @@ private:
     const uint  _width,
                 _heigth;
     const uint  _probability,
-                _gen_rate,
-                _buffer_size;
+                _gen_rate;
     const bool  _isFullscrene, _showCursor;
 
     SDL_Window* _window;
@@ -45,7 +42,6 @@ public:
     WNWindow(const uint width, const uint height,
              const uint probability,
              const uint gen_rate,
-             const uint buffer_size,
              const bool isFullscrene, const bool showCursor);
 
     /**
