@@ -17,7 +17,7 @@ private:
     const uint  _width,
                 _heigth;
     const uint  _probability,
-                _gen_rate;
+                _genRate, _frameRate;
     const bool  _isFullscrene, _showCursor;
 
     SDL_Window* _window;
@@ -41,7 +41,7 @@ public:
      */
     WNWindow(const uint width, const uint height,
              const uint probability,
-             const uint gen_rate,
+             const uint genRate, const uint _frameRate,
              const bool isFullscrene, const bool showCursor);
 
     /**
@@ -53,7 +53,7 @@ public:
      * @brief returns if the init was successful
      * @return …
      */
-    bool isInit();
+    bool isInit() const;
 
     /**
      * @brief initializes the Object

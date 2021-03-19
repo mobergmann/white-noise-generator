@@ -29,8 +29,8 @@
    <layout class="QVBoxLayout" name="verticalLayout_4">
     <item>
      <layout class="QGridLayout" name="gridLayout">
-      <item row="5" column="0">
-       <layout class="QVBoxLayout" name="verticalLayout">
+      <item row="6" column="0">
+       <layout class="QVBoxLayout" name="controlls_layout">
         <item>
          <widget class="QPushButton" name="pause_button">
           <property name="text">
@@ -60,11 +60,11 @@
        </layout>
       </item>
       <item row="3" column="0">
-       <layout class="QVBoxLayout" name="fps_layout_2">
+       <layout class="QVBoxLayout" name="gen_layout">
         <item>
-         <layout class="QHBoxLayout" name="fps_slider_layout">
+         <layout class="QHBoxLayout" name="gen_slider_layout">
           <item>
-           <widget class="QLabel" name="fps_label">
+           <widget class="QLabel" name="gen_label">
             <property name="toolTip">
              <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;The rate, at which a noise should be generated.&lt;/p&gt;&lt;p&gt;In Generations per Millisecond.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
             </property>
@@ -74,7 +74,7 @@
            </widget>
           </item>
           <item>
-           <widget class="QSlider" name="fps_slider">
+           <widget class="QSlider" name="gen_slider">
             <property name="maximum">
              <number>120</number>
             </property>
@@ -86,7 +86,7 @@
          </layout>
         </item>
         <item>
-         <widget class="QLineEdit" name="fps_lineEdit">
+         <widget class="QLineEdit" name="gen_lineEdit">
           <property name="text">
            <string>17</string>
           </property>
@@ -94,7 +94,7 @@
         </item>
        </layout>
       </item>
-      <item row="4" column="0">
+      <item row="5" column="0">
        <layout class="QVBoxLayout" name="settings_layout">
         <item>
          <widget class="QCheckBox" name="fullscreen_checkBox">
@@ -151,9 +151,9 @@
        </layout>
       </item>
       <item row="1" column="0">
-       <layout class="QHBoxLayout" name="horizontalLayout">
+       <layout class="QHBoxLayout" name="dimenstion_layout">
         <item>
-         <layout class="QVBoxLayout" name="verticalLayout_3">
+         <layout class="QVBoxLayout" name="width_layout">
           <item>
            <widget class="QLabel" name="width_label">
             <property name="text">
@@ -171,7 +171,7 @@
          </layout>
         </item>
         <item>
-         <layout class="QVBoxLayout" name="verticalLayout_2">
+         <layout class="QVBoxLayout" name="height_layout">
           <item>
            <widget class="QLabel" name="height_label">
             <property name="text">
@@ -187,6 +187,35 @@
            </widget>
           </item>
          </layout>
+        </item>
+       </layout>
+      </item>
+      <item row="4" column="0">
+       <layout class="QVBoxLayout" name="frameRate_layout">
+        <item>
+         <layout class="QHBoxLayout" name="frameRate_slider_layout">
+          <item>
+           <widget class="QLabel" name="frameRate_label">
+            <property name="text">
+             <string>Frame Rate</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QSlider" name="frameRate_slider">
+            <property name="orientation">
+             <enum>Qt::Horizontal</enum>
+            </property>
+           </widget>
+          </item>
+         </layout>
+        </item>
+        <item>
+         <widget class="QLineEdit" name="frameRate_lineEdit">
+          <property name="text">
+           <string>17</string>
+          </property>
+         </widget>
         </item>
        </layout>
       </item>

@@ -56,14 +56,15 @@ void MainWindow::on_start_button_clicked()
         uint width          = ui->width_lineEdit->text().toUInt(),
              height         = ui->height_lineEdit->text().toUInt(),
              probability    = ui->probability_lineEdit->text().toUInt(),
-             gen_rate       = ui->fps_lineEdit->text().toUInt();
+             gen_rate       = ui->gen_lineEdit->text().toUInt(),
+             frame_rate     = ui->frameRate_lineEdit->text().toUInt();
         bool isFullscrene   = ui->fullscreen_checkBox->isChecked(),
              showCursor     = ui->showCursor_checkBox->isChecked();
 
 
         // Create SDL Window and initialize it
         _wnWindow = new WNWindow(width, height,
-                                 probability, gen_rate,
+                                 probability, gen_rate, frame_rate,
                                  isFullscrene, showCursor);
         _wnWindow->init();
         if (!_wnWindow->isInit())

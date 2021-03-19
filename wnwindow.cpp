@@ -10,16 +10,16 @@
 
 
 WNWindow::WNWindow()
-    : WNWindow(1200, 720, 45, 17, false, true)
+    : WNWindow(1200, 720, 45, 17, 17, false, true)
 {}
 
 WNWindow::WNWindow(const uint width, const uint height,
                    const uint probability,
-                   const uint gen_rate,
+                   const uint genRate, const uint frameRate,
                    const bool isFullscrene, const bool showCursor)
     : _is_init(false),
       _width(width), _heigth(height),
-      _probability(probability), _gen_rate(gen_rate),
+      _probability(probability), _genRate(genRate), _frameRate(frameRate),
       _isFullscrene(isFullscrene), _showCursor(showCursor),
       _pixles(new int[_width * _heigth])
 {}
@@ -48,7 +48,7 @@ WNWindow::~WNWindow()
 }
 
 
-bool WNWindow::isInit()
+bool WNWindow::isInit() const
 {
     return _is_init;
 }
@@ -142,12 +142,12 @@ void WNWindow::init()
     // Sedule Generation every x seconds
     QTimer *genTimer = new QTimer(this);
     connect(genTimer, SIGNAL(timeout()), this, SLOT(generate())); //&WNWindow::generate);
-    genTimer->start(_gen_rate);
+    genTimer->start(_genRate);
 
     // Sedule Renering every x seconds
     QTimer *renderTimer = new QTimer(this);
     connect(renderTimer, SIGNAL(timeout()), this, SLOT(render())); //&WNWindow::generate);
-    renderTimer->start(17);
+    renderTimer->start(_frameRate);
 
 
     // Initialisation succenssful
