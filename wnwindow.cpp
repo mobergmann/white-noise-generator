@@ -98,18 +98,27 @@ WNWindow::WNWindow(const uint width, const uint height,
     // Draw Background Color
     SDL_RenderPresent(_renderer);
 
+    // only create one timer, if the rates are equal,
+    // to prevent update-losses
+    if (_genRate == _frameRate)
+    {
+        // Sedule Generation every x seconds
+        QTimer *genTimer = new QTimer(this);
+        connect(genTimer, SIGNAL(timeout()), this, SLOT(generate_and_render()));
+        genTimer->start(_genRate);
+    }
+    else
+    {
+        // Sedule Generation every x seconds
+        QTimer *genTimer = new QTimer(this);
+        connect(genTimer, SIGNAL(timeout()), this, SLOT(generate()));
+        genTimer->start(_genRate);
 
-    // Sedule Generation every x seconds
-    QTimer *genTimer = new QTimer(this);
-    connect(genTimer, SIGNAL(timeout()), this, SLOT(generate())); //&WNWindow::generate);
-    genTimer->start(_genRate);
-
-    // Sedule Renering every x seconds
-    QTimer *renderTimer = new QTimer(this);
-    connect(renderTimer, SIGNAL(timeout()), this, SLOT(render())); //&WNWindow::generate);
-    renderTimer->start(_frameRate);
-
-
+        // Sedule Renering every x seconds
+        QTimer *renderTimer = new QTimer(this);
+        connect(renderTimer, SIGNAL(timeout()), this, SLOT(render()));
+        renderTimer->start(_frameRate);
+    }
 }
 
 WNWindow::~WNWindow()
@@ -129,6 +138,7 @@ WNWindow::~WNWindow()
     }
 }
 
+
 bool WNWindow::isPaused() const
 {
     return _isPause;
@@ -137,6 +147,33 @@ bool WNWindow::isPaused() const
 void WNWindow::togglePause()
 {
     _isPause = !_isPause;
+}
+
+
+void WNWindow::generate()
+{
+    if (_isPause)
+    {
+        return;
+    }
+
+    if (_probability == 0)
+    {
+        return;
+    }
+
+    for (uint i = 0; i < _width * _heigth; i++)
+    {
+        // Check if Pixel is noised // TODO better comment :(
+        if (rand() > (float)RAND_MAX * ((float)_probability) / 100)
+        {
+            _pixles[i] = 1;
+        }
+        else
+        {
+            _pixles[i] = 0;
+        }
+    }
 }
 
 void WNWindow::render()
@@ -164,30 +201,4 @@ void WNWindow::render()
 
     // Draw Everything
     SDL_RenderPresent(_renderer);
-}
-
-void WNWindow::generate()
-{
-    if (_isPause)
-    {
-        return;
-    }
-
-    if (_probability == 0)
-    {
-        return;
-    }
-
-    for (uint i = 0; i < _width * _heigth; i++)
-    {
-        // Check if Pixel is noised // TODO better comment :(
-        if (rand() > (float)RAND_MAX * ((float)_probability) / 100)
-        {
-            _pixles[i] = 1;
-        }
-        else
-        {
-            _pixles[i] = 0;
-        }
-    }
 }

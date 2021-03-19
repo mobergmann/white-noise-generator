@@ -65,14 +65,24 @@ public:
 public slots:
 
     /**
+     * @brief Generates an array of Pixels
+     */
+    void generate();
+
+    /**
      * @brief Renders the White Noise
      */
     void render();
 
     /**
-     * @brief Generates an array of Pixels
+     * @brief first calls the generate method,
+     * then calls the render method.
      */
-    void generate();
+    inline void generate_and_render()
+    {
+        generate();
+        render();
+    }
 };
 
 #endif // WNWINDOW_H

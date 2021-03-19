@@ -94,7 +94,7 @@ void MainWindow::on_start_button_clicked()
 
         // Enable Pause Button
         ui->pause_button->setDisabled(false);
-        ui->pause_button->setText("Play");
+        ui->pause_button->setText("Pause");
 
 
         // First Time generation and render to not start with a blank screen

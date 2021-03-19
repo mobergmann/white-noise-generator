@@ -44,6 +44,13 @@
           </property>
          </widget>
         </item>
+        <item>
+         <widget class="QToolButton" name="toolButton">
+          <property name="text">
+           <string>...</string>
+          </property>
+         </widget>
+        </item>
         <item alignment="Qt::AlignBottom">
          <widget class="QPushButton" name="start_button">
           <property name="text">
@@ -66,7 +73,7 @@
           <item>
            <widget class="QLabel" name="gen_label">
             <property name="toolTip">
-             <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;The rate, at which a new noise should be generated.&lt;/p&gt;&lt;p&gt;In &lt;span style=&quot; font-weight:600; font-style:italic;&quot;&gt;Generations per Millisecond&lt;/span&gt;.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+             <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;The rate, at which a new noise should be generated.&lt;/p&gt;&lt;p&gt;In &lt;span style=&quot; font-weight:600; font-style:italic;&quot;&gt;Generation per Millisecond&lt;/span&gt;.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
             </property>
             <property name="text">
              <string>Gen. Rate:</string>
