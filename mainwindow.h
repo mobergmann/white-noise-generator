@@ -4,6 +4,7 @@
 #include <QMainWindow>
 
 #include "wnwindow.h"
+    class WNWindow;
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class MainWindow; }
@@ -13,9 +14,10 @@ class MainWindow : public QMainWindow
 {
     Q_OBJECT
 
-public:
-    MainWindow(QWidget *parent = nullptr);
-    ~MainWindow();
+private:
+    bool _is_wnKilled;
+    Ui::MainWindow* ui;
+    WNWindow* _wnWindow;
 
 private slots:
     void on_start_button_clicked();
@@ -24,9 +26,19 @@ private slots:
 
     void on_pause_button_clicked(bool checked);
 
-private:
-    Ui::MainWindow* ui;
+public:
+    MainWindow(QWidget *parent = nullptr);
+    ~MainWindow();
 
-    WNWindow* _wnWindow;
+    /**
+     * @brief returns if the white noise window has been killed
+     * @return …
+     */
+    inline bool is_wnKilled() { return _is_wnKilled; }
+
+    /**
+     * @brief Quits/ closes the White-Noise Window.
+     */
+    void quit_wn();
 };
 #endif // MAINWINDOW_H

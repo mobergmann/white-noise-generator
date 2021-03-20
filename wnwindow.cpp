@@ -1,26 +1,30 @@
 #include "wnwindow.h"
 
-#include <iostream>
 #include <QErrorMessage>
 #include <QMessageBox>
 #include <QTimer>
-#include <QDebug>
+#include <QObject>
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_image.h>
 
+#include <pollthread.h>
+#include <thread>
 
 WNWindow::WNWindow()
-    : WNWindow(1200, 720, 45, 17, 17, false, true)
-{}
+    : WNWindow(nullptr, 1200, 720, 45, 17, 17, false, true)
+{
+    // TODO message box
+}
 
-WNWindow::WNWindow(const uint width, const uint height,
+WNWindow::WNWindow(MainWindow* window,
+                   const uint width, const uint height,
                    const uint probability,
                    const uint genRate, const uint frameRate,
                    const bool isFullscrene, const bool showCursor)
-    : _width(width), _heigth(height),
+    : _mw(window), _isPause(false),
+      _width(width), _heigth(height),
       _probability(probability), _genRate(genRate), _frameRate(frameRate),
       _isFullscrene(isFullscrene), _showCursor(showCursor),
-      _isPause(false),
       _pixles(new int[_width * _heigth])
 {
     // Generate SDL main window
@@ -94,29 +98,30 @@ WNWindow::WNWindow(const uint width, const uint height,
     // Clear the Screen
     SDL_RenderClear(_renderer);
 
-
     // Draw Background Color
     SDL_RenderPresent(_renderer);
 
-    // only create one timer, if the rates are equal,
+    // Only create one Timer, if the rates are equal,
     // to prevent update-losses
     if (_genRate == _frameRate)
     {
-        // Sedule Generation every x seconds
-        QTimer *genTimer = new QTimer(this);
-        connect(genTimer, SIGNAL(timeout()), this, SLOT(generate_and_render()));
-        genTimer->start(_genRate);
+        // Schedule Generation and Rendering every _genRate or _frameRate milliseconds
+        QTimer *timer = new QTimer(this);
+        connect(timer, &QTimer::timeout, this, [this]{ generate(); render(); } );
+                // SLOT(generate_and_render()));
+                // [this]{ generate(); render(); } );
+        timer->start(_genRate);
     }
     else
     {
-        // Sedule Generation every x seconds
+        // Schedule Generation every _genRate milliseconds
         QTimer *genTimer = new QTimer(this);
-        connect(genTimer, SIGNAL(timeout()), this, SLOT(generate()));
+        connect(genTimer, &QTimer::timeout, this, &WNWindow::generate);
         genTimer->start(_genRate);
 
-        // Sedule Renering every x seconds
+        // Schedule Renering every _fooRate milliseconds
         QTimer *renderTimer = new QTimer(this);
-        connect(renderTimer, SIGNAL(timeout()), this, SLOT(render()));
+        connect(renderTimer, &QTimer::timeout, this, &WNWindow::render);
         renderTimer->start(_frameRate);
     }
 }
@@ -149,6 +154,19 @@ void WNWindow::togglePause()
     _isPause = !_isPause;
 }
 
+
+void WNWindow::poll_exit()
+{
+    SDL_Event e;
+
+    do
+    {
+        SDL_PollEvent(&e);
+    }
+    while(e.type != SDL_QUIT);
+
+    _mw->quit_wn();
+}
 
 void WNWindow::generate()
 {

@@ -5,27 +5,35 @@
 #include <SDL2/SDL_image.h>
 #include <QObject>
 #include <QWidget>
-#include <thread>
+#include <QThread>
+
+#include "mainwindow.h"
+    class MainWindow;
 
 class WNWindow : public QWidget
 {
     Q_OBJECT
 
 private:
-    bool _isInit;
+    MainWindow* _mw;
+    bool _isPause;
 
     const uint  _width,
                 _heigth;
+
     const uint  _probability,
                 _genRate, _frameRate;
+
     const bool  _isFullscrene, _showCursor;
 
-    bool _isPause;
+
+    int* _pixles;
 
     SDL_Window* _window;
     SDL_Renderer* _renderer;
 
-    int* _pixles;
+    QThread pollThread;
+
 
 public:
 
@@ -41,7 +49,8 @@ public:
      * @param height height of the SDL Window
      * @param buffer_size size of the buffer
      */
-    WNWindow(const uint width, const uint height,
+    WNWindow(MainWindow* window,
+             const uint width, const uint height,
              const uint probability,
              const uint genRate, const uint _frameRate,
              const bool isFullscrene, const bool showCursor);
@@ -65,6 +74,18 @@ public:
 public slots:
 
     /**
+     * @brief polls for an sdl exit event
+     */
+    void poll_exit();
+
+    // TODO remove
+    inline void generate_and_render()
+    {
+        generate();
+        render();
+    }
+
+    /**
      * @brief Generates an array of Pixels
      */
     void generate();
@@ -73,16 +94,6 @@ public slots:
      * @brief Renders the White Noise
      */
     void render();
-
-    /**
-     * @brief first calls the generate method,
-     * then calls the render method.
-     */
-    inline void generate_and_render()
-    {
-        generate();
-        render();
-    }
 };
 
 #endif // WNWINDOW_H

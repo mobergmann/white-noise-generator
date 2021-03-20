@@ -35,9 +35,10 @@ MainWindow::~MainWindow()
 }
 
 
-void MainWindow::on_start_button_clicked()
+
+void MainWindow::quit_wn()
 {
-    // Delete Window, if the window already exists
+    // Cleanup window, if it exists
     if (_wnWindow)
     {
         delete _wnWindow;
@@ -49,7 +50,18 @@ void MainWindow::on_start_button_clicked()
         // Disable Pause Button
         ui->pause_button->setDisabled(true);
         ui->pause_button->setText("Pause");
+    }
+}
 
+
+
+void MainWindow::on_start_button_clicked()
+{
+    // TODO main window is not beeing deeted
+    // Delete Window, if the window already exists
+    if (_wnWindow)
+    {
+        quit_wn();
         return;
     }
     // Generate Window with the input values
@@ -69,7 +81,8 @@ void MainWindow::on_start_button_clicked()
         try
         {
             // Create SDL Window and initialize it
-            _wnWindow = new WNWindow(width, height,
+            _wnWindow = new WNWindow(this,
+                                     width, height,
                                      probability, gen_rate, frame_rate,
                                      isFullscrene, showCursor);
         }
@@ -100,6 +113,35 @@ void MainWindow::on_start_button_clicked()
         // First Time generation and render to not start with a blank screen
         _wnWindow->generate();
         _wnWindow->render();
+
+
+        // polls for an exit event in sdl, and
+        // closes the window, if one is send.
+        auto pollFunc = [](MainWindow* window)
+        {
+            SDL_Event e;
+
+            // check for quit event as long as the window exists
+            do
+            {
+                // if the window doesn't exist, stop the thread
+                if (window->is_wnKilled())
+                {
+                    return;
+                }
+
+                // check for quit event
+                SDL_PollEvent(&e);
+            }
+            while(e.type != SDL_QUIT);
+
+            // the window doesn't exists => quit window
+            window->quit_wn();
+        };
+
+        // starts a thread, that polls for an sdl quit
+        std::thread* pollThread = new std::thread(pollFunc, this);
+        pollThread->detach();
     }
 }
 
