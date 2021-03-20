@@ -15,78 +15,72 @@ class WNWindow : public QWidget
     Q_OBJECT
 
 private:
-    MainWindow* _mw;
+    /// Reference to the SDL_Window, on which is drawn
+    SDL_Window* _window;
+    /// Reference to the SDL_Renderer, which draws
+    SDL_Renderer* _renderer;
+    /// Reference to a Mainwindow
+    MainWindow* _parent;
+
+    /// If the White Noise is currently paused (no rendering and generation)
     bool _isPause;
-
-    const uint  _width,
-                _heigth;
-
-    const uint  _probability,
-                _genRate, _frameRate;
-
-    const bool  _isFullscrene, _showCursor;
-
-
+    /// Array, which resembels each Pixel, which is drawn
     int* _pixles;
 
-    SDL_Window* _window;
-    SDL_Renderer* _renderer;
-
-    QThread pollThread;
+    /* Parameter from the constructor */
+    const uint  _width,
+                _heigth;
+    const uint  _probability,
+                _genRate,
+                _frameRate;
+    const bool  _isFullscrene,
+                _showCursor;
 
 
 public:
 
     /**
-     * @brief Construct a new WNWindow object
+     * @brief Construct a new WNWindow Object
      */
     WNWindow();
 
     /**
-     * @brief Construct a new WNWindow object
-     * 
-     * @param width width of the SDL Window
-     * @param height height of the SDL Window
-     * @param buffer_size size of the buffer
+     * @brief Construct a new WNWindow Object
+     * @param parent: Reference to the Parent (MainWindow)
+     * @param width: Width of the SDL Window
+     * @param height: Height of the SDL Window
+     * @param probability: Probability, that a Pixel is noised
+     * @param genRate: Rate at which a new Noise should be generated
+     * @param frameRate: Rate at which the SDL_Window should redraw
+     * @param isFullscrene: Bool, if the Window should be displayed
+     * @param showCursor: If the Cursor should be displayed
      */
-    WNWindow(MainWindow* window,
+    WNWindow(MainWindow* parent,
              const uint width, const uint height,
              const uint probability,
-             const uint genRate, const uint _frameRate,
+             const uint genRate, const uint frameRate,
              const bool isFullscrene, const bool showCursor);
 
     /**
-     * @brief Destroy the WNWindow object
+     * @brief Destroys the WNWindow Object
      */
     virtual ~WNWindow();
 
     /**
-     * @brief returns, if the stream is paused.
-     * @return …
+     * @brief Returns, if the Nosie Generation is Paused
      */
     bool isPaused() const;
 
     /**
-     * @brief inverts the pause statement.
+     * @brief Inverts the Pause Statement
      */
     void togglePause();
+
 
 public slots:
 
     /**
-     * @brief polls for an sdl exit event
-     */
-    void poll_exit();
-
-    // TODO remove
-    inline void generate_and_render()
-    {
-        generate();
-        render();
-    }
-
-    /**
-     * @brief Generates an array of Pixels
+     * @brief Generates an Array of Pixels
      */
     void generate();
 

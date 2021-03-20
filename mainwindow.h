@@ -15,9 +15,22 @@ class MainWindow : public QMainWindow
     Q_OBJECT
 
 private:
-    bool _is_wnKilled;
+    /// Reference to the UI Object of the MainWindow
     Ui::MainWindow* ui;
+
+    /// Reference to a White Noise SDL Window Container.
     WNWindow* _wnWindow;
+
+    /**
+     * @brief Polls for an SDL_Quit Event and calls the kill_wn() Method.
+     */
+    void poll_exit();
+
+    /**
+     * @brief Quits/ Closes the White Noise Window.
+     */
+    void kill_wn();
+
 
 private slots:
     void on_start_button_clicked();
@@ -26,19 +39,18 @@ private slots:
 
     void on_pause_button_clicked(bool checked);
 
+
 public:
+    /**
+     * @brief Constructs a MainWindow
+     * @param Parent, derived from QMainWindow
+     */
     MainWindow(QWidget *parent = nullptr);
+
+    /**
+     * @brief Destructs the MainWindow
+     */
     ~MainWindow();
 
-    /**
-     * @brief returns if the white noise window has been killed
-     * @return …
-     */
-    inline bool is_wnKilled() { return _is_wnKilled; }
-
-    /**
-     * @brief Quits/ closes the White-Noise Window.
-     */
-    void quit_wn();
 };
 #endif // MAINWINDOW_H

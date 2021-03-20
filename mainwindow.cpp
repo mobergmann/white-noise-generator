@@ -4,6 +4,7 @@
 #include <QMessageBox>
 #include <QScreen>
 #include <QTimer>
+#include <thread>
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
@@ -35,10 +36,12 @@ MainWindow::~MainWindow()
 }
 
 
-
-void MainWindow::quit_wn()
+/**
+ * @brief Kills/ quits/ closes the White Noise Window.
+ */
+void MainWindow::kill_wn()
 {
-    // Cleanup window, if it exists
+    // deletion only when it exists
     if (_wnWindow)
     {
         delete _wnWindow;
@@ -54,6 +57,30 @@ void MainWindow::quit_wn()
 }
 
 
+/**
+ * @brief Polls as long as the white noise window exists
+ * and as long as the SDL_QUIT event hasen't been send
+ */
+void MainWindow::poll_exit()
+{
+    SDL_Event e;
+
+    do
+    {
+        // end the thread, when the white noise is already closed
+        if (_wnWindow)
+        {
+            return;
+        }
+
+        SDL_PollEvent(&e);
+    }
+    while(e.type != SDL_QUIT);
+
+    // kill the white noise window
+    kill_wn();
+}
+
 
 void MainWindow::on_start_button_clicked()
 {
@@ -61,7 +88,7 @@ void MainWindow::on_start_button_clicked()
     // Delete Window, if the window already exists
     if (_wnWindow)
     {
-        quit_wn();
+        kill_wn();
         return;
     }
     // Generate Window with the input values
@@ -110,37 +137,12 @@ void MainWindow::on_start_button_clicked()
         ui->pause_button->setText("Pause");
 
 
-        // First Time generation and render to not start with a blank screen
+        // First Time generation and rendering to not start with a blank Screen
         _wnWindow->generate();
         _wnWindow->render();
 
-
-        // polls for an exit event in sdl, and
-        // closes the window, if one is send.
-        auto pollFunc = [](MainWindow* window)
-        {
-            SDL_Event e;
-
-            // check for quit event as long as the window exists
-            do
-            {
-                // if the window doesn't exist, stop the thread
-                if (window->is_wnKilled())
-                {
-                    return;
-                }
-
-                // check for quit event
-                SDL_PollEvent(&e);
-            }
-            while(e.type != SDL_QUIT);
-
-            // the window doesn't exists => quit window
-            window->quit_wn();
-        };
-
-        // starts a thread, that polls for an sdl quit
-        std::thread* pollThread = new std::thread(pollFunc, this);
+        // Starts a Thread, that polls for an SQL_Quit
+        std::thread* pollThread = new std::thread(&MainWindow::poll_exit, this);
         pollThread->detach();
     }
 }

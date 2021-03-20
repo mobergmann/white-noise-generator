@@ -11,11 +11,9 @@ CONFIG += c++11
 SOURCES += \
     main.cpp \
     mainwindow.cpp \
-    pollthread.cpp \
     wnwindow.cpp
 
 HEADERS += \
-    pollthread.h \
     wnwindow.h \
     mainwindow.h
 

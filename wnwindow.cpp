@@ -1,14 +1,19 @@
 #include "wnwindow.h"
 
+// QT
 #include <QErrorMessage>
 #include <QMessageBox>
 #include <QTimer>
 #include <QObject>
+
+// SDL
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_image.h>
 
-#include <pollthread.h>
+// STD
 #include <thread>
+    using std::thread;
+
 
 WNWindow::WNWindow()
     : WNWindow(nullptr, 1200, 720, 45, 17, 17, false, true)
@@ -16,16 +21,16 @@ WNWindow::WNWindow()
     // TODO message box
 }
 
-WNWindow::WNWindow(MainWindow* window,
+WNWindow::WNWindow(MainWindow* parent,
                    const uint width, const uint height,
                    const uint probability,
                    const uint genRate, const uint frameRate,
                    const bool isFullscrene, const bool showCursor)
-    : _mw(window), _isPause(false),
+    : _parent(parent),
+      _isPause(false), _pixles(new int[width * height]),
       _width(width), _heigth(height),
       _probability(probability), _genRate(genRate), _frameRate(frameRate),
-      _isFullscrene(isFullscrene), _showCursor(showCursor),
-      _pixles(new int[_width * _heigth])
+      _isFullscrene(isFullscrene), _showCursor(showCursor)
 {
     // Generate SDL main window
     _window = SDL_CreateWindow(
@@ -78,7 +83,7 @@ WNWindow::WNWindow(MainWindow* window,
     SDL_ShowCursor(_showCursor);
 
 
-    // Set Background Color (black)
+    // Set Background Color to black
     if (SDL_SetRenderDrawColor(_renderer, 0, 0, 0, 0))
     {
         QMessageBox::critical(
@@ -96,14 +101,14 @@ WNWindow::WNWindow(MainWindow* window,
     }
 
     // Clear the Screen
-    SDL_RenderClear(_renderer);
+    SDL_RenderClear(_renderer); // TODO error
 
     // Draw Background Color
-    SDL_RenderPresent(_renderer);
+    SDL_RenderPresent(_renderer); // TODO error
 
 
     // Only create one Timer, if the rates are equal,
-    // to prevent update-losses
+    // to prevent update-losses due to timer inperfection
     if (_genRate == _frameRate)
     {
         // Schedule Generation and Rendering every _genRate or _frameRate milliseconds
@@ -155,19 +160,6 @@ void WNWindow::togglePause()
 }
 
 
-void WNWindow::poll_exit()
-{
-    SDL_Event e;
-
-    do
-    {
-        SDL_PollEvent(&e);
-    }
-    while(e.type != SDL_QUIT);
-
-    _mw->quit_wn();
-}
-
 void WNWindow::generate()
 {
     if (_isPause)
@@ -196,11 +188,6 @@ void WNWindow::generate()
 
 void WNWindow::render()
 {
-    if (_isPause)
-    {
-        return;
-    }
-
     // Draw Background (black)
     SDL_SetRenderDrawColor(_renderer, 255, 255, 255, 255);
     SDL_RenderClear(_renderer);
