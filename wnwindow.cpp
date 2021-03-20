@@ -101,15 +101,15 @@ WNWindow::WNWindow(MainWindow* window,
     // Draw Background Color
     SDL_RenderPresent(_renderer);
 
+
     // Only create one Timer, if the rates are equal,
     // to prevent update-losses
     if (_genRate == _frameRate)
     {
         // Schedule Generation and Rendering every _genRate or _frameRate milliseconds
         QTimer *timer = new QTimer(this);
-        connect(timer, &QTimer::timeout, this, [this]{ generate(); render(); } );
-                // SLOT(generate_and_render()));
-                // [this]{ generate(); render(); } );
+        connect(timer, &QTimer::timeout, this, &WNWindow::generate);
+        connect(timer, &QTimer::timeout, this, &WNWindow::render);
         timer->start(_genRate);
     }
     else
