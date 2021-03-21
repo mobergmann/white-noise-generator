@@ -29,8 +29,8 @@ private:
 
     /// If the White Noise is currently paused (no rendering and generation)
     bool _isPause;
-    /// Array, which resembels each Pixel, which is drawn
-    int* _pixles;
+    /// Array, which resembels the Noise state of each Pixel, which is drawn
+    bool* _pixles;
 
     /* Parameter from the constructor */
     const uint  _width,
@@ -78,7 +78,7 @@ public:
     void togglePause();
 
 
-public slots:
+private slots:
 
     /**
      * @brief Generates an White Noised array

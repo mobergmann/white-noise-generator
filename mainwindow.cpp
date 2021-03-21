@@ -27,7 +27,7 @@ MainWindow::MainWindow(QWidget *parent)
 
 
     // Starts a Thread, that polls for an SDL_Quit
-    _pollThread = new std::thread(&MainWindow::poll_exit, this);
+//    _pollThread = new std::thread(&MainWindow::poll_exit, this);
 }
 
 MainWindow::~MainWindow()
@@ -67,12 +67,12 @@ void MainWindow::poll_exit()
 
         if (e.type == SDL_QUIT)
         {
-            std::cout << "Print Kill" << std::endl;
+            std::cout << "Kill Event" << std::endl;
 
             // kill the white noise window
             kill_wn();
 
-            std::cout << "Print Killed" << std::endl;
+            std::cout << "Finished Kill Event" << std::endl;
         }
     }
 }
@@ -88,25 +88,25 @@ void MainWindow::kill_wn()
     // to prevent segfault
     if (!_wn)
     {
-        std::cout << "Already killed" << std::endl;
+        std::cout << "\tAlready killed" << std::endl;
         return;
     }
 
-    std::cout << "Delete White Noise Pointer" << std::endl;
+    std::cout << "\tDelete White Noise Pointer" << std::endl;
     delete _wn;
     _wn = nullptr;
 
-    std::cout << "Canging UI" << std::endl;
+    std::cout << "\tCanging UI" << std::endl;
 
     // Turn Start Button into a Stop Button
-    ui->start_button->setText("Start");
+    ui->start_button->setText("\tStart");
 
     // Disable Pause Button
     ui->pause_button->setDisabled(true);
-    ui->pause_button->setText("Pause");
+    ui->pause_button->setText("\tPause");
 
 
-    std::cout << "Finished Killing" << std::endl;
+    std::cout << "\tFinished Killing" << std::endl;
 }
 
 
@@ -140,19 +140,20 @@ void MainWindow::on_start_button_clicked()
                                  probability, gen_rate, frame_rate,
                                  isFullscrene, showCursor);
         }
-        catch (...)
+        catch (...) // Error on creation => change nothing and stop
         {
-            // shows an error message
+            // Show an Error to the User
             QMessageBox::critical(
                 nullptr,
                 "Critical Error:",
                 "SDL Could not be initalized. Please restart the application and try again.",
                 QMessageBox::Ok);
 
+            // Cleanup
             delete _wn;
             _wn = nullptr;
 
-            return; // no ui changes and stop
+            return; // no ui changes and exit
         }
 
 
@@ -162,11 +163,6 @@ void MainWindow::on_start_button_clicked()
         // Enable Pause Button
         ui->pause_button->setDisabled(false);
         ui->pause_button->setText("Pause");
-
-
-        // First Time generation and rendering to not start with a blank Screen
-        _wn->generate();
-        _wn->render();
 
 
 //        // delete pollThread, if its already exists
