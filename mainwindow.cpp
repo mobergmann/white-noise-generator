@@ -6,10 +6,6 @@
 #include <QScreen>
 #include <QTimer>
 
-// STD
-#include <iostream>
-#include <thread>
-
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
@@ -63,12 +59,8 @@ void MainWindow::poll_exit()
 
         if (e.type == SDL_QUIT)
         {
-            std::cout << "Kill Event" << std::endl;
-
             // kill the white noise window
             kill_wn();
-
-            std::cout << "Finished Kill Event" << std::endl;
         }
     }
 }
@@ -78,21 +70,16 @@ void MainWindow::poll_exit()
  */
 void MainWindow::kill_wn()
 {
-    std::cout << "Start kill" << std::endl;
-
     // If Window already deleted, then skip,
     // to prevent segfault
     if (!_wn)
     {
-        std::cout << "\tAlready killed" << std::endl;
         return;
     }
 
-    std::cout << "\tDelete White Noise Pointer" << std::endl;
     delete _wn;
     _wn = nullptr;
 
-    std::cout << "\tCanging UI" << std::endl;
 
     // Turn Start Button into a Stop Button
     ui->start_button->setText("\tStart");
@@ -100,9 +87,6 @@ void MainWindow::kill_wn()
     // Disable Pause Button
     ui->pause_button->setDisabled(true);
     ui->pause_button->setText("\tPause");
-
-
-    std::cout << "\tFinished Killing" << std::endl;
 }
 
 
@@ -220,6 +204,25 @@ void MainWindow::on_start_button_clicked()
     }
 }
 
+void MainWindow::on_pause_button_clicked(bool checked)
+{
+    // only execute, when a window exists
+    if (_wn)
+    {
+        // Change Text of Button
+        if (checked)
+        {
+            ui->pause_button->setText("Play");
+        }
+        else
+        {
+            ui->pause_button->setText("Pause");
+        }
+
+        _wn->togglePause();
+    }
+}
+
 void MainWindow::on_fullscreen_checkBox_stateChanged(int state)
 {
     // Get Screensize (Resolution)
@@ -240,23 +243,4 @@ void MainWindow::on_fullscreen_checkBox_stateChanged(int state)
     // Disable Height Input
     ui->height_label->setDisabled(state);
     ui->height_lineEdit->setDisabled(state);
-}
-
-void MainWindow::on_pause_button_clicked(bool checked)
-{
-    // only execute, when a window exists
-    if (_wn)
-    {
-        // Change Text of Button
-        if (checked)
-        {
-            ui->pause_button->setText("Play");
-        }
-        else
-        {
-            ui->pause_button->setText("Pause");
-        }
-
-        _wn->togglePause();
-    }
 }

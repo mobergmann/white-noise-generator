@@ -11,9 +11,6 @@
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_image.h>
 
-// STD
-#include <thread>
-
 
 WhiteNoise::WhiteNoise(MainWindow *parent)
     : WhiteNoise(parent, 1200, 720, 45, 17, 17, false, true)

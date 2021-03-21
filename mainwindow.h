@@ -47,9 +47,9 @@ private:
 private slots:
     void on_start_button_clicked();
 
-    void on_fullscreen_checkBox_stateChanged(int arg1);
-
     void on_pause_button_clicked(bool checked);
+
+    void on_fullscreen_checkBox_stateChanged(int arg1);
 
 
 public:
