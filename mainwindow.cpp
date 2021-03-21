@@ -18,15 +18,11 @@ MainWindow::MainWindow(QWidget *parent)
 {
     ui->setupUi(this);
 
-    // Disable Pause Button
-    ui->pause_button->setDisabled(true); // TODO make default state disabed in designer
-
     // Init SDL with video
     SDL_Init(SDL_INIT_VIDEO);
 
-
-
     // Starts a Thread, that polls for an SDL_Quit
+    // See #13
 //    _pollThread = new std::thread(&MainWindow::poll_exit, this);
 }
 
