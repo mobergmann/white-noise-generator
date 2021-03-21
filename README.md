@@ -32,7 +32,9 @@ This will clone the repo, create a folder called _build_, and compile the projec
 # Using the Application
 If you build the Project yourself, then you can proceed to _Selfbuild_.
 
-## Release
+## Launching
+
+### Release
 1. Prerequisites
   1. Make sure (_Qt_)[https://www.qt.io/] is installed on your system and part of your Path
   2. Make sure (SDL2)[https://www.libsdl.org/] is installed on your system and part of your Path
@@ -41,8 +43,10 @@ If you build the Project yourself, then you can proceed to _Selfbuild_.
 4. (Linux:) Make the extracted file executable: `chmod u+x`
 5. Execute the program
 
-## Selfbuild
+### Selfbuild
 1. Download the Release
 2. Extract the Release
 3. (Linux:) Make the extracted file executable: `chmod u+x`
 4. Execute the program
+
+## Usage
