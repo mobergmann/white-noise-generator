@@ -1,15 +1,20 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
 
+// QT
 #include <QMessageBox>
 #include <QScreen>
 #include <QTimer>
+
+// STD
+#include <iostream>
 #include <thread>
+
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
     , ui(new Ui::MainWindow)
-    , _wnWindow(nullptr)
+    , _wn(nullptr)
 {
     ui->setupUi(this);
 
@@ -18,42 +23,33 @@ MainWindow::MainWindow(QWidget *parent)
 
     // Init SDL with video
     SDL_Init(SDL_INIT_VIDEO);
+
+
+
+    // Starts a Thread, that polls for an SDL_Quit
+    _pollThread = new std::thread(&MainWindow::poll_exit, this);
 }
 
 MainWindow::~MainWindow()
 {
-    // Cleanup window, if it exists
-    if (_wnWindow)
+    // Terminate and Delete Polling Thread
+    if (_pollThread)
     {
-        delete _wnWindow;
-        _wnWindow = nullptr;
+        delete _pollThread;
+        _pollThread = nullptr;
+    }
+
+    // Cleanup window (to prevent possible segfault)
+    if (_wn)
+    {
+        delete _wn;
+        _wn = nullptr;
     }
 
     // Cleanup SDL
     SDL_Quit();
 
     delete ui;
-}
-
-
-/**
- * @brief Kills/ quits/ closes the White Noise Window.
- */
-void MainWindow::kill_wn()
-{
-    // deletion only when it exists
-    if (_wnWindow)
-    {
-        delete _wnWindow;
-        _wnWindow = nullptr;
-
-        // Turn Start Button into a Stop Button
-        ui->start_button->setText("Start");
-
-        // Disable Pause Button
-        ui->pause_button->setDisabled(true);
-        ui->pause_button->setText("Pause");
-    }
 }
 
 
@@ -65,28 +61,59 @@ void MainWindow::poll_exit()
 {
     SDL_Event e;
 
-    do
+    while (true)
     {
-        // end the thread, when the white noise is already closed
-        if (_wnWindow)
-        {
-            return;
-        }
-
         SDL_PollEvent(&e);
-    }
-    while(e.type != SDL_QUIT);
 
-    // kill the white noise window
-    kill_wn();
+        if (e.type == SDL_QUIT)
+        {
+            std::cout << "Print Kill" << std::endl;
+
+            // kill the white noise window
+            kill_wn();
+
+            std::cout << "Print Killed" << std::endl;
+        }
+    }
+}
+
+/**
+ * @brief Kills/ quits/ closes the White Noise Window.
+ */
+void MainWindow::kill_wn()
+{
+    std::cout << "Start kill" << std::endl;
+
+    // If Window already deleted, then skip,
+    // to prevent segfault
+    if (!_wn)
+    {
+        std::cout << "Already killed" << std::endl;
+        return;
+    }
+
+    std::cout << "Delete White Noise Pointer" << std::endl;
+    delete _wn;
+    _wn = nullptr;
+
+    std::cout << "Canging UI" << std::endl;
+
+    // Turn Start Button into a Stop Button
+    ui->start_button->setText("Start");
+
+    // Disable Pause Button
+    ui->pause_button->setDisabled(true);
+    ui->pause_button->setText("Pause");
+
+
+    std::cout << "Finished Killing" << std::endl;
 }
 
 
 void MainWindow::on_start_button_clicked()
 {
-    // TODO main window is not beeing deeted
-    // Delete Window, if the window already exists
-    if (_wnWindow)
+    // Delete Window, if it exists
+    if (_wn)
     {
         kill_wn();
         return;
@@ -108,10 +135,10 @@ void MainWindow::on_start_button_clicked()
         try
         {
             // Create SDL Window and initialize it
-            _wnWindow = new WNWindow(this,
-                                     width, height,
-                                     probability, gen_rate, frame_rate,
-                                     isFullscrene, showCursor);
+            _wn = new WhiteNoise(this,
+                                 width, height,
+                                 probability, gen_rate, frame_rate,
+                                 isFullscrene, showCursor);
         }
         catch (...)
         {
@@ -122,8 +149,8 @@ void MainWindow::on_start_button_clicked()
                 "SDL Could not be initalized. Please restart the application and try again.",
                 QMessageBox::Ok);
 
-            delete _wnWindow;
-            _wnWindow = nullptr;
+            delete _wn;
+            _wn = nullptr;
 
             return; // no ui changes and stop
         }
@@ -138,40 +165,46 @@ void MainWindow::on_start_button_clicked()
 
 
         // First Time generation and rendering to not start with a blank Screen
-        _wnWindow->generate();
-        _wnWindow->render();
+        _wn->generate();
+        _wn->render();
 
-        // Starts a Thread, that polls for an SQL_Quit
-        std::thread* pollThread = new std::thread(&MainWindow::poll_exit, this);
-        pollThread->detach();
+
+//        // delete pollThread, if its already exists
+//        // shouldn't happen, only to be sure
+//        if (_pollThread)
+//        {
+//            delete _pollThread;
+//            _pollThread = nullptr;
+//        }
     }
 }
 
 void MainWindow::on_fullscreen_checkBox_stateChanged(int state)
 {
-    bool isFullscrene = ui->fullscreen_checkBox->isChecked();
-
-    // Set the Screen Size as the Resolution
+    // Get Screensize (Resolution)
     QScreen *screen = QGuiApplication::primaryScreen();
     QRect  screenGeometry = screen->geometry();
-    int height = screenGeometry.height();
-    int width = screenGeometry.width();
+    int screenHeight = screenGeometry.height();
+    int screenWidth = screenGeometry.width();
 
-    ui->width_lineEdit->setText(QString::number(width));
-    ui->height_lineEdit->setText(QString::number(height));
 
-    // disable width input
-    ui->width_label->setDisabled(isFullscrene);
-    ui->width_lineEdit->setDisabled(isFullscrene);
-    // disable height input
-    ui->height_label->setDisabled(isFullscrene);
-    ui->height_lineEdit->setDisabled(isFullscrene);
+    // Set Fullscrene to Screene Resulotion
+    ui->height_lineEdit->setText(QString::number(screenHeight));
+    ui->width_lineEdit->setText(QString::number(screenWidth));
+
+    // Disable Width Input
+    ui->width_label->setDisabled(state);
+    ui->width_lineEdit->setDisabled(state);
+
+    // Disable Height Input
+    ui->height_label->setDisabled(state);
+    ui->height_lineEdit->setDisabled(state);
 }
 
 void MainWindow::on_pause_button_clicked(bool checked)
 {
     // only execute, when a window exists
-    if (_wnWindow)
+    if (_wn)
     {
         // Change Text of Button
         if (checked)
@@ -183,6 +216,6 @@ void MainWindow::on_pause_button_clicked(bool checked)
             ui->pause_button->setText("Pause");
         }
 
-        _wnWindow->togglePause();
+        _wn->togglePause();
     }
 }

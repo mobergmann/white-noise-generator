@@ -1,4 +1,4 @@
-#include "wnwindow.h"
+#include "whitenoise.h"
 
 // QT
 #include <QErrorMessage>
@@ -12,25 +12,25 @@
 
 // STD
 #include <thread>
-    using std::thread;
 
 
-WNWindow::WNWindow()
-    : WNWindow(nullptr, 1200, 720, 45, 17, 17, false, true)
+WhiteNoise::WhiteNoise(MainWindow *parent)
+    : WhiteNoise(parent, 1200, 720, 45, 17, 17, false, true)
 {
     // TODO message box
 }
 
-WNWindow::WNWindow(MainWindow* parent,
+WhiteNoise::WhiteNoise(MainWindow* parent,
                    const uint width, const uint height,
                    const uint probability,
                    const uint genRate, const uint frameRate,
                    const bool isFullscrene, const bool showCursor)
-    : _parent(parent),
-      _isPause(false), _pixles(new int[width * height]),
-      _width(width), _heigth(height),
-      _probability(probability), _genRate(genRate), _frameRate(frameRate),
-      _isFullscrene(isFullscrene), _showCursor(showCursor)
+    : QWidget(nullptr)
+    , _parent(parent)
+    , _isPause(false), _pixles(new int[width * height])
+    , _width(width), _heigth(height)
+    , _probability(probability), _genRate(genRate), _frameRate(frameRate)
+    , _isFullscrene(isFullscrene), _showCursor(showCursor)
 {
     // Generate SDL main window
     _window = SDL_CreateWindow(
@@ -113,25 +113,25 @@ WNWindow::WNWindow(MainWindow* parent,
     {
         // Schedule Generation and Rendering every _genRate or _frameRate milliseconds
         QTimer *timer = new QTimer(this);
-        connect(timer, &QTimer::timeout, this, &WNWindow::generate);
-        connect(timer, &QTimer::timeout, this, &WNWindow::render);
+        connect(timer, &QTimer::timeout, this, &WhiteNoise::generate);
+        connect(timer, &QTimer::timeout, this, &WhiteNoise::render);
         timer->start(_genRate);
     }
     else
     {
         // Schedule Generation every _genRate milliseconds
         QTimer *genTimer = new QTimer(this);
-        connect(genTimer, &QTimer::timeout, this, &WNWindow::generate);
+        connect(genTimer, &QTimer::timeout, this, &WhiteNoise::generate);
         genTimer->start(_genRate);
 
         // Schedule Renering every _fooRate milliseconds
         QTimer *renderTimer = new QTimer(this);
-        connect(renderTimer, &QTimer::timeout, this, &WNWindow::render);
+        connect(renderTimer, &QTimer::timeout, this, &WhiteNoise::render);
         renderTimer->start(_frameRate);
     }
 }
 
-WNWindow::~WNWindow()
+WhiteNoise::~WhiteNoise()
 {
     // Cleanup of renderer only if exists
     if (_renderer)
@@ -149,18 +149,18 @@ WNWindow::~WNWindow()
 }
 
 
-bool WNWindow::isPaused() const
+bool WhiteNoise::isPaused() const
 {
     return _isPause;
 }
 
-void WNWindow::togglePause()
+void WhiteNoise::togglePause()
 {
     _isPause = !_isPause;
 }
 
 
-void WNWindow::generate()
+void WhiteNoise::generate()
 {
     if (_isPause)
     {
@@ -186,7 +186,7 @@ void WNWindow::generate()
     }
 }
 
-void WNWindow::render()
+void WhiteNoise::render()
 {
     // Draw Background (black)
     SDL_SetRenderDrawColor(_renderer, 255, 255, 255, 255);

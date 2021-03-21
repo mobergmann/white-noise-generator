@@ -1,18 +1,23 @@
-#ifndef WNWINDOW_H
-#define WNWINDOW_H
+#ifndef WHITENOISE_H
+#define WHITENOISE_H
 
+// QT
+#include <QWidget>
+#include <QObject>
+
+// SDL
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_image.h>
-#include <QObject>
-#include <QWidget>
-#include <QThread>
 
+// Forward declaration
 #include "mainwindow.h"
     class MainWindow;
 
-class WNWindow : public QWidget
+
+class WhiteNoise : public QWidget
 {
     Q_OBJECT
+
 
 private:
     /// Reference to the SDL_Window, on which is drawn
@@ -38,11 +43,7 @@ private:
 
 
 public:
-
-    /**
-     * @brief Construct a new WNWindow Object
-     */
-    WNWindow();
+    explicit WhiteNoise(MainWindow *parent = nullptr);
 
     /**
      * @brief Construct a new WNWindow Object
@@ -55,7 +56,7 @@ public:
      * @param isFullscrene: Bool, if the Window should be displayed
      * @param showCursor: If the Cursor should be displayed
      */
-    WNWindow(MainWindow* parent,
+    WhiteNoise(MainWindow* parent,
              const uint width, const uint height,
              const uint probability,
              const uint genRate, const uint frameRate,
@@ -64,7 +65,7 @@ public:
     /**
      * @brief Destroys the WNWindow Object
      */
-    virtual ~WNWindow();
+    virtual ~WhiteNoise();
 
     /**
      * @brief Returns, if the Nosie Generation is Paused
@@ -80,7 +81,7 @@ public:
 public slots:
 
     /**
-     * @brief Generates an Array of Pixels
+     * @brief Generates an White Noised array
      */
     void generate();
 
@@ -88,6 +89,7 @@ public slots:
      * @brief Renders the White Noise
      */
     void render();
+
 };
 
-#endif // WNWINDOW_H
+#endif // WHITENOISE_H

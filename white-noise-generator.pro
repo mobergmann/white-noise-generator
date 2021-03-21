@@ -11,10 +11,10 @@ CONFIG += c++11
 SOURCES += \
     main.cpp \
     mainwindow.cpp \
-    wnwindow.cpp
+    whitenoise.cpp
 
 HEADERS += \
-    wnwindow.h \
+    whitenoise.h \
     mainwindow.h
 
 FORMS += \
