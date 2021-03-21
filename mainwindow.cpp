@@ -121,12 +121,78 @@ void MainWindow::on_start_button_clicked()
     // Generate Window with the input values
     else
     {
-        // Convert to unsigned integer (if not a valid int, default is 0)
-        uint width          = ui->width_lineEdit->text().toUInt(),
-             height         = ui->height_lineEdit->text().toUInt(),
-             probability    = ui->probability_lineEdit->text().toUInt(),
-             gen_rate       = ui->gen_lineEdit->text().toUInt(),
-             frame_rate     = ui->frameRate_lineEdit->text().toUInt();
+        /* Check input */
+
+        // Width
+        uint width;
+        if (ui->width_lineEdit->text().toUInt() == 0
+                && ui->width_lineEdit->text() != "0")
+        {
+            QMessageBox::warning(this,
+                                 "Input Warning",
+                                 "You entered a number in '" + ui->width_label->text() +
+                                 "', which couldn't be parsed, therefore 50 will be assumed.",
+                QMessageBox::Ok);
+
+            width = 50;
+        }
+        else
+        {
+            width = ui->width_lineEdit->text().toUInt();
+        }
+
+        // Height
+        uint height;
+        if (ui->height_lineEdit->text().toUInt() == 0
+                && ui->height_lineEdit->text() != "0")
+        {
+            QMessageBox::warning(this,
+                                 "Input Warning",
+                                 "You entered a number in '" + ui->height_label->text() +
+                                 "', which couldn't be parsed, therefore 50 will be assumed.",
+                QMessageBox::Ok);
+            height = 50;
+        }
+        else
+        {
+            height = ui->height_lineEdit->text().toUInt();
+        }
+
+        // Probability
+        if (ui->probability_lineEdit->text().toUInt() == 0
+                && ui->probability_lineEdit->text() != "0")
+        {
+            QMessageBox::warning(
+                this,
+                "Input Warning",
+                "You entered a number in '" + ui->probability_label->text() + "', which couldn't be parsed, therefore 0 will be assumed.",
+                QMessageBox::Ok);
+        }
+        uint probability = ui->probability_lineEdit->text().toUInt();
+
+        // Generation Rate
+        if (ui->gen_lineEdit->text().toUInt() == 0
+                && ui->gen_lineEdit->text() != "0")
+        {
+            QMessageBox::warning(
+                this,
+                "Input Warning",
+                        "You entered a number in '" + ui->gen_label->text() + "', which couldn't be parsed, therefore 0 will be assumed.",
+                QMessageBox::Ok);
+        }
+        uint gen_rate = ui->gen_lineEdit->text().toUInt();
+
+        // Frame Rate
+        if (ui->frameRate_lineEdit->text().toUInt() == 0
+                && ui->frameRate_lineEdit->text() != "0")
+        {
+            QMessageBox::warning(
+                this,
+                "Input Warning",
+                        "You entered a number in '" + ui->frameRate_label->text() + "', which couldn't be parsed, therefore 0 will be assumed.",
+                QMessageBox::Ok);
+        }
+        uint frame_rate = ui->frameRate_lineEdit->text().toUInt();
 
         bool isFullscrene   = ui->fullscreen_checkBox->isChecked(),
              showCursor     = ui->showCursor_checkBox->isChecked();
@@ -142,18 +208,10 @@ void MainWindow::on_start_button_clicked()
         }
         catch (...) // Error on creation => change nothing and stop
         {
-            // Show an Error to the User
-            QMessageBox::critical(
-                nullptr,
-                "Critical Error:",
-                "SDL Could not be initalized. Please restart the application and try again.",
-                QMessageBox::Ok);
-
-            // Cleanup
             delete _wn;
             _wn = nullptr;
 
-            return; // no ui changes and exit
+            return; // Don't do Ui changes and exit
         }
 
 
@@ -163,15 +221,6 @@ void MainWindow::on_start_button_clicked()
         // Enable Pause Button
         ui->pause_button->setDisabled(false);
         ui->pause_button->setText("Pause");
-
-
-//        // delete pollThread, if its already exists
-//        // shouldn't happen, only to be sure
-//        if (_pollThread)
-//        {
-//            delete _pollThread;
-//            _pollThread = nullptr;
-//        }
     }
 }
 

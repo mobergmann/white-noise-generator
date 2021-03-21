@@ -221,7 +221,10 @@ void WhiteNoise::generate()
 
     if (_probability == 0)          // No Noises => do Nothing
     {
-        return;
+        for (uint i = 0; i < _width * _heigth; i++)
+        {
+            _pixles[i] = 0;
+        }
     }
     else if (_probability == 100)   // Only Noises => everything Noised
     {
